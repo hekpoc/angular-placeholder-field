@@ -1,0 +1,1 @@
+ngPlaceholderField = angular.module 'ngPlaceholderField', []

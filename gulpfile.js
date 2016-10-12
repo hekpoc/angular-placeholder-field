@@ -4,26 +4,30 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     less = require('gulp-less'),
     cleanCss = require('gulp-clean-css'),
-    gutil = require('gulp-util');
+    gutil = require('gulp-util'),
+    coffee = require('gulp-coffee'),
+    plumber = require('gulp-plumber');
 
 var stylesPath = 'src/styles/*.less',
-    scriptsPath = 'src/scripts/*.js';
+    scriptsPath = 'src/scripts/*.coffee';
 
 gulp.task('scripts', function() {
     return gulp.src(scriptsPath)
+        .pipe(plumber())
+        .pipe(coffee())
         .pipe(concat('angular-placeholder-field.js'))
         .pipe(gulp.dest('dist'))
         .pipe(rename('angular-placeholder-field.min.js'))
-        .pipe(uglify().on('error', gutil.log))
-        .pipe(gulp.dest('dist'))
-        .on('error', function(e) {
-            gutil.log(e);
-        });
+        .pipe(uglify())
+        .pipe(plumber.stop())
+        .pipe(gulp.dest('dist'));
 });
 
 gulp.task('styles', function() {
     return gulp.src(stylesPath)
+        .pipe(plumber())
         .pipe(less())
+        .pipe(plumber.stop())
         .pipe(concat('angular-placeholder-field.css'))
         .pipe(gulp.dest('dist'))
         .pipe(rename('angular-placeholder-field.min.css'))
